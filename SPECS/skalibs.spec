@@ -1,6 +1,6 @@
 Name:         skalibs
 Version:      1.3.0
-Release:      1
+Release:      2
 License:      ISC
 Source:       http://www.skarnet.org/software/%{name}/%{name}-%{version}.tar.gz
 Summary:      General-purpose development libraries
@@ -26,30 +26,48 @@ mkdir -p %{buildroot}/%{_lib}
 mkdir -p %{buildroot}%{_libdir}
 pushd conf-compile
 
-touch flag-allstatic
 rm -f flag-slashpackage
 echo 'musl-gcc'                 > conf-cc
 echo 'musl-gcc -static'         > conf-ld
 echo 'musl-gcc'                 > conf-dynld
-echo %{buildroot}%{_sysconfdir}             > conf-etc
-echo %{buildroot}%{_bindir}                 > conf-install-command
-echo %{buildroot}%{_includedir}/skalibs     > conf-install-include
-echo %{buildroot}%{_libdir}/skalibs         > conf-install-library
-echo %{buildroot}/%{_lib}                   > conf-install-library.so
-echo %{buildroot}%{_libdir}/skalibs/sysdeps > conf-install-sysdeps
+echo %{_sysconfdir}             > conf-etc
+echo %{_bindir}                 > conf-install-command
+echo %{_includedir}/skalibs     > conf-install-include
+echo %{_libdir}/skalibs         > conf-install-library
+echo /%{_lib}                   > conf-install-library.so
+echo %{_libdir}/skalibs/sysdeps > conf-install-sysdeps
 
 popd
+package/compile
 
 %install
 
-make install
+for i in package/*.exported 
+do 
+	case ${i##*/} in
+	library.so.exported) d=/%{_lib}                   ;;
+	include.exported)    d=%{_includedir}/skalibs     ;;
+	sysdeps.exported)    d=%{_libdir}/skalibs/sysdeps ;;
+	library.exported)    d=%{_libdir}/skalibs         ;;
+	command.exported)    d=%{_bindir}                 ;;
+	esac
+	mkdir -p %{buildroot}$d
+	f=`basename $i|sed 's/.exported//'`
+	install `sed s,^,$f/, $i` %{buildroot}$d
+done
+mkdir -p %{buildroot}%{_sysconfdir}
+install etc/leapsecs.dat %{buildroot}%{_sysconfdir}
 
 %files
 %defattr (-,root,root)
 %{_includedir}/skalibs/
 %{_libdir}/skalibs/
 %{_sysconfdir}/leapsecs.dat
+/%{_lib}/*.so
 
 %changelog
+* Fri Mar 15 2013 David Arroyo <droyo@aqwari.us> - 1.0.0-2
+- Update to fix hardcoded path issues
+
 * Thu Mar 14 2013 David Arroyo <droyo@aqwari.us> - 1.3.0-1
 - Initial build
