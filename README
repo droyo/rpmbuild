@@ -1,0 +1,29 @@
+This is a collection of .spec files suitable for building
+the s6 supervision suite and related software, seen here.
+
+http://skarnet.org/software/
+
+This is by far the best init system I have seen, and it
+deserves much more attention than systemd, upstart et al
+are getting. I provide these packages for the people who
+are turned off by the unusual build system and filesystem
+layout.
+
+DISCLAIMER: I have taken some packaging liberties that the
+author would probably frown upon. If you have a problem
+with the software, *please* ensure that it is not a result
+of mis-packaging, by following the author's instructions
+for manually installing the software, before you bother
+him with bugs that aren't his fault.
+
+These packages create static binaries linked against the
+musl libc package built here. The musl and skalibs packages
+are not split up into library and -devel packages, as is
+RHEL custom. The resulting binaries are quite tiny.
+
+The execline package is a special case; execline includes
+several binaries with the same name as shell builtins
+(exec, if, export). To avoid confusion and conflicts, these
+binaries are stuffed in /usr/libexec/execline and 
+/usr/bin/execline[b] are actually execlineb scripts that
+modify PATH before calling the "real" binaries.
