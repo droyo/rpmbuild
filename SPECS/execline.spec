@@ -1,6 +1,6 @@
 Name:         execline
 Version:      1.2.0
-Release:      2
+Release:      3
 License:      ISC
 Source0:      http://www.skarnet.org/software/%{name}/%{name}-%{version}.tar.gz
 Source1:      execline.eb
@@ -15,7 +15,7 @@ Execline is a small, secure scripting language.
 
 %prep
 %setup -q -n admin/%{name}-%{version}
-%patch
+%patch0 -p1
 
 %build
 rm -rf %{buildroot}
@@ -77,7 +77,10 @@ done
 %{_bindir}/execlineb
 
 %changelog
-* Fri Mar 15 2013 David Arroyo <droyo@aqwari.us> - 1.0.0-2
+* Thu Mar 28 2013 David Arroyo <droyo@aqwari.us> - 1.2.0-3
+- Fix bug in fdreserve
+
+* Fri Mar 15 2013 David Arroyo <droyo@aqwari.us> - 1.2.0-2
 - Update to fix hardcoded path issues
 
 * Thu Mar 14 2013 David Arroyo <droyo@aqwari.us> - 1.2.0-1
