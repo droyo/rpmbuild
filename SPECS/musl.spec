@@ -1,12 +1,10 @@
 Name:         musl
 Summary:      A lightweight standard C library
 Version:      0.9.9
-Release:      1
+Release:      2
 License:      MIT
 Group:        Development/Libraries
 Source:       http://www.musl-libc.org/releases/%{name}-%{version}.tar.gz
-Conflicts:    glibc-headers glibc-devel
-Provides:     glibc-headers glibc-devel
 
 %description
 musl is a “libc”, an implementation of the standard library functionality
@@ -18,7 +16,12 @@ intended for use on Linux-based systems.
 
 %build
 rm -rf %{buildroot}
-%configure
+%configure \
+	--libdir=%{_libdir}/musl \
+	--includedir=%{_includedir}/musl \
+	--bindir=%{_bindir} \
+	--syslibdir=/%{_lib}
+
 make
 
 %install
@@ -32,5 +35,8 @@ make DESTDIR=%{buildroot} install
 %{_includedir}/
 
 %changelog
+* Thu Mar 28 2013 David Arroyo <droyo@aqwari.us> - 0.9.9-2
+- Remove conflict with glibc
+
 * Tue Mar 12 2013 David Arroyo <droyo@aqwari.us> - 0.9.9-1
 - Initial build

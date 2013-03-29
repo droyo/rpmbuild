@@ -5,6 +5,7 @@ License:      ISC
 Source0:      http://www.skarnet.org/software/%{name}/%{name}-%{version}.tar.gz
 Source1:      execline.eb
 Source2:      execlineb.eb
+Patch0:       fdreserve.patch
 Summary:      Minimal scripting language
 Group:        Development/Languages
 BuildRequires: /usr/bin/musl-gcc skalibs
@@ -14,6 +15,7 @@ Execline is a small, secure scripting language.
 
 %prep
 %setup -q -n admin/%{name}-%{version}
+%patch
 
 %build
 rm -rf %{buildroot}
